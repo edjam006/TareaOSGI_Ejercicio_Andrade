@@ -19,10 +19,15 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # 3. Compilar el proyecto con Maven (crea el .jar)
+    # 3. Compilar el proyecto con Maven
     - name: Build & Test
       run: mvn clean package -DskipTests
 
-    # 4. Construir la imagen Docker usando el archivo que creamos en el Paso 2
+    # 4. VERIFICACIÓN (Paso extra de seguridad)
+    # Este paso nos mostrará si el archivo .jar se creó correctamente
+    - name: List files in target
+      run: ls -la target/
+
+    # 5. Construir la imagen Docker
     - name: Build Docker image
       run: docker build -t myapp:latest .
