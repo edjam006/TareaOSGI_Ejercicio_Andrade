@@ -1,4 +1,4 @@
-name: CI Spring Boot Debug
+name: CI Spring Boot
 
 on:
   push:
@@ -17,19 +17,10 @@ jobs:
         distribution: 'temurin'
         java-version: '17'
 
-    # Construimos el proyecto
-    - name: Build with Maven
+    # Construimos todos los módulos
+    - name: Build & Test
       run: mvn clean package -DskipTests
 
-    # --- DETECTIVE ---
-    # Este paso buscará dónde rayos se creó el .jar y nos mostrará la estructura de carpetas
-    - name: Find JAR file
-      run: |
-        echo "--> Buscando archivos .jar en todo el proyecto:"
-        find . -type f -name "*.jar"
-        echo "--> Listando carpetas:"
-        ls -R
-
-    # Intentamos construir Docker SOLO si el jar está en la raíz (si no, fallará, pero ya sabremos por qué)
+    # Ahora Docker sí encontrará el archivo porque corregimos la ruta en el Dockerfile
     - name: Build Docker image
       run: docker build -t myapp:latest .
